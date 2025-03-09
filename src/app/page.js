@@ -3,11 +3,17 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function AdminFlow() {
   const [showSplash, setShowSplash] = useState(true);
   const splashDuration = 3000;
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const router = useRouter();
+
+  const handleLogin = () => {
+    router.push("/admin");   // Perform authentication logic here...------- ------------------------ ---------------------- -------------------- -------------------- ------------
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,10 +22,10 @@ export default function AdminFlow() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (showSplash) {
+  if (showSplash) { 
     return (
       <motion.div 
-        className="flex flex-col items-center justify-center w-full h-screen bg-[#256DD3] text-white"
+        className="flex flex-col items-center justify-center w-full h-screen bg-primary text-white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         
@@ -82,7 +88,7 @@ export default function AdminFlow() {
       />
       
       <motion.div 
-        className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96"
+        className="relative z-10 bg-content p-8 rounded-lg shadow-lg w-96"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -111,6 +117,7 @@ export default function AdminFlow() {
         </div>
         
         <button 
+          onClick={handleLogin}
           className="mt-6 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex justify-center items-center"
         >
           Log in
