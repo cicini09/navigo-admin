@@ -1,17 +1,26 @@
 @import "tailwindcss";
 
 .bg-primary {
-    @apply bg-[#256DD3]; /* Main Primary Color */
-  }
-  
-  .bg-sidebar {
-    @apply bg-blue-700; /* Sidebar Background */
-  }
-  
-  .bg-content {
-    @apply bg-gray-100; /* Main Content Background */
-  }
-  
-  .text-royalblue {
-    @apply text-[#256DD3];
-  }
+  @apply bg-[#256DD3]; /* Main Primary Color */
+}
+
+.bg-sidebar {
+  @apply bg-blue-700; /* Sidebar Background */
+}
+
+.bg-content {
+  @apply bg-gray-100; /* Main Content Background */
+}
+
+.text-royalblue {
+  @apply text-[#256DD3];
+}
+
+/* Dashboard container backgrounds */
+.bg-temp-container {
+  @apply bg-red-600; /* Temporary container background */
+}
+
+.bg-dashboard-pattern {
+  @apply bg-blue-100; /* Dashboard pattern container background */
+}
