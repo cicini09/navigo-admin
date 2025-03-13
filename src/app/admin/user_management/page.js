@@ -92,7 +92,7 @@ export default function UserManagement() {
 
   return (
     <motion.div
-      className="p-6"
+      className="p-1"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
