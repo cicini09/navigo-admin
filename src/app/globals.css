@@ -4,6 +4,10 @@
   @apply bg-[#256DD3]; /* Main Primary Color */
 }
 
+.bg-primarydarker {
+  @apply bg-[#2263bf];
+}
+
 .bg-sidebar {
   @apply bg-blue-700; /* Sidebar Background */
 }

@@ -17,7 +17,7 @@ export default function AdminLayout({ children }) {
   return (
     <div className="flex flex-col h-screen">
       {/* Top Tab Bar with Profile */}
-      <div className="bg-primary text-white flex justify-between items-center px-6 py-3 shadow-md">
+      <div className="bg-primarydarker text-white flex justify-between items-center px-6 py-3 shadow-md">
         {/* Logo and Brand */}
         <div className="flex items-center">
           <h1 className="text-4xl font-bold">NaviGo</h1>

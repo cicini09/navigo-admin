@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FiSearch, FiMoreVertical } from "react-icons/fi";
+import { FiSearch, FiMoreVertical, FiChevronDown } from "react-icons/fi";
 
 // Status enum
 const UserStatus = {
@@ -15,7 +15,24 @@ export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [showStatusFilter, setShowStatusFilter] = useState(false);
+  const statusFilterRef = useRef(null);
   const usersPerPage = 50;
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (statusFilterRef.current && !statusFilterRef.current.contains(event.target)) {
+        setShowStatusFilter(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Generate users on the client side only (after component mounts)
   useEffect(() => {
@@ -63,12 +80,17 @@ export default function UserManagement() {
     setIsLoading(false);
   }, []);
 
-  // Filter users based on search query
-  const filteredUsers = users.filter(user => 
-    user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.phoneNumber?.includes(searchQuery)
-  );
+  // Filter users based on search query and status
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = 
+      user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.phoneNumber?.includes(searchQuery);
+    
+    const matchesStatus = selectedStatus ? user.status === selectedStatus : true;
+    
+    return matchesSearch && matchesStatus;
+  });
 
   // Calculate pagination
   const indexOfLastUser = currentPage * usersPerPage;
@@ -97,8 +119,53 @@ export default function UserManagement() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Search and filters row */}
-      <div className="flex mb-4">
+      {/* Page Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">User List</h1>
+        <p className="text-gray-600 mt-1">Manage and view all system users</p>
+      </div>
+      
+      {/* Filters and Search */}
+      <div className="flex flex-wrap mb-4 gap-3">
+        {/* Status Filter */}
+        <div className="relative" ref={statusFilterRef}>
+          <button
+            onClick={() => setShowStatusFilter(!showStatusFilter)}
+            className="flex items-center px-4 py-2 border rounded-md hover:bg-gray-50"
+          >
+            Status: {selectedStatus || "All"} <FiChevronDown className="ml-2" />
+          </button>
+          
+          {showStatusFilter && (
+            <div className="absolute mt-1 w-48 bg-white rounded-md shadow-lg z-20">
+              <ul className="py-1">
+                <li 
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setSelectedStatus("");
+                    setShowStatusFilter(false);
+                  }}
+                >
+                  All
+                </li>
+                {Object.values(UserStatus).map(status => (
+                  <li 
+                    key={status}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setShowStatusFilter(false);
+                    }}
+                  >
+                    {status}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        
+        {/* Search */}
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <FiSearch className="text-gray-400" />
@@ -112,7 +179,7 @@ export default function UserManagement() {
           />
         </div>
         <button
-          className="ml-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
         >
           Search
         </button>
@@ -136,8 +203,8 @@ export default function UserManagement() {
             <p className="mt-2 text-gray-600">Loading users...</p>
           </div>
         ) : (
-          /* Table body - scrollable container */
-          <div className="max-h-[70vh] overflow-y-auto">
+          /* Table body - scrollable container - reduced height to prevent overflow */
+          <div className="max-h-[60vh] overflow-y-auto">
             {currentUsers.map((user) => (
               <div key={`user-${user.id}`} className="grid grid-cols-5 border-b hover:bg-gray-50">
                 <div className="px-4 py-4 text-sm text-gray-900">{user.email}</div>
@@ -244,4 +311,3 @@ export default function UserManagement() {
     </motion.div>
   );
 }
-
